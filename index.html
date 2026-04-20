@@ -5,193 +5,130 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:system-ui,sans-serif;background:#f5f0e8;color:#1a1a1a;min-height:100vh}
-:root{
-  --yellow:#FAC775;
-  --yellow-light:#FAEEDA;
-  --yellow-dark:#BA7517;
-  --yellow-deep:#412402;
-  --black:#1a1a1a;
-  --gray:#f0ebe0;
-  --gray2:#e0d8c8;
-  --gray3:#888;
-  --white:#fff;
-  --red:#E24B4A;
-  --green:#639922;
-  --blue:#378ADD;
-  --border:rgba(0,0,0,0.12)
-}
-.topbar{background:var(--black);color:var(--white);padding:0 24px;display:flex;align-items:center;gap:16px;height:52px;border-bottom:3px solid var(--yellow)}
-.logo{font-size:20px;font-weight:700;letter-spacing:-0.5px;color:var(--yellow)}
-.logo span{color:var(--white)}
+:root{--y:#FAC775;--yd:#BA7517;--ydeep:#412402;--blk:#1a1a1a;--gray:#f0ebe0;--g2:#e0d8c8;--g3:#888;--w:#fff;--red:#E24B4A;--grn:#639922;--blu:#378ADD;--bdr:rgba(0,0,0,0.1)}
+.topbar{background:var(--blk);color:#fff;padding:0 24px;display:flex;align-items:center;gap:16px;height:52px;border-bottom:3px solid var(--y)}
+.logo{font-size:20px;font-weight:700;color:var(--y)}.logo span{color:#fff}
 .topbar-title{font-size:13px;color:rgba(255,255,255,0.5);border-left:1px solid rgba(255,255,255,0.2);padding-left:16px}
 .topbar-actions{margin-left:auto;display:flex;gap:8px;align-items:center}
+.sync-dot{width:7px;height:7px;border-radius:50%;background:#4CAF50;display:inline-block;margin-right:5px}
+.sync-dot.syncing{background:var(--y);animation:pulse 1s infinite}
+.sync-dot.offline{background:var(--red)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+.sync-label{font-size:11px;color:rgba(255,255,255,0.5)}
 .btn{padding:6px 14px;border-radius:6px;font-size:13px;font-weight:500;cursor:pointer;border:none;transition:all 0.15s}
-.btn-primary{background:var(--yellow);color:var(--yellow-deep)}
-.btn-primary:hover{background:#EFB860}
-.btn-ghost{background:transparent;color:rgba(255,255,255,0.7);border:1px solid rgba(255,255,255,0.2)}
-.btn-ghost:hover{background:rgba(255,255,255,0.1);color:#fff}
+.btn-primary{background:var(--y);color:var(--ydeep)}.btn-primary:hover{background:#EFB860}
+.btn-ghost{background:transparent;color:rgba(255,255,255,0.7);border:1px solid rgba(255,255,255,0.2)}.btn-ghost:hover{background:rgba(255,255,255,0.1);color:#fff}
 .btn-sm{padding:4px 10px;font-size:12px}
-.btn-danger{background:transparent;color:var(--red);border:1px solid rgba(226,75,74,0.3)}
-.btn-danger:hover{background:rgba(226,75,74,0.08)}
-
-.board{padding:20px 24px;display:flex;gap:16px;align-items:flex-start;overflow-x:auto;min-height:calc(100vh - 52px)}
-.col{background:var(--gray);border-radius:10px;width:320px;min-width:320px;border:1px solid var(--gray2);flex-shrink:0}
-.col-header{padding:14px 16px 10px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--gray2)}
+.btn-danger{background:transparent;color:var(--red);border:1px solid rgba(226,75,74,0.3)}.btn-danger:hover{background:rgba(226,75,74,0.08)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:16px 24px 0}
+.stat{background:var(--w);border:1px solid var(--bdr);border-radius:8px;padding:10px 14px}
+.stat-n{font-size:22px;font-weight:700}.stat-l{font-size:11px;color:var(--g3);margin-top:2px}
+.stat.hl{background:var(--blk)}.stat.hl .stat-n{color:var(--y)}.stat.hl .stat-l{color:rgba(255,255,255,0.5)}
+.board{padding:20px 24px;display:flex;gap:16px;align-items:flex-start;overflow-x:auto;min-height:calc(100vh - 160px)}
+.col{background:var(--gray);border-radius:10px;width:320px;min-width:320px;border:1px solid var(--g2);flex-shrink:0}
+.col-header{padding:14px 16px 10px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--g2)}
 .col-dot{width:10px;height:10px;border-radius:50%}
-.col-title{font-size:13px;font-weight:600;letter-spacing:0.3px;text-transform:uppercase;color:var(--black)}
-.col-count{background:var(--gray2);color:var(--gray3);font-size:11px;font-weight:600;padding:2px 7px;border-radius:10px;margin-left:auto}
+.col-title{font-size:13px;font-weight:600;letter-spacing:0.3px;text-transform:uppercase;color:var(--blk)}
+.col-count{background:var(--g2);color:var(--g3);font-size:11px;font-weight:600;padding:2px 7px;border-radius:10px;margin-left:auto}
 .col-cards{padding:10px;min-height:120px;display:flex;flex-direction:column;gap:8px}
-.col-add{padding:6px 10px 10px;margin:0 2px}
-.add-link{font-size:12px;color:var(--gray3);cursor:pointer;display:flex;align-items:center;gap:4px;padding:4px 6px;border-radius:5px}
-.add-link:hover{color:var(--black);background:var(--gray2)}
-
-.card{background:var(--white);border-radius:8px;border:1px solid var(--border);padding:12px;cursor:grab;transition:box-shadow 0.15s,transform 0.1s;position:relative}
-.card:active{cursor:grabbing}
-.card.dragging{opacity:0.5;transform:rotate(1deg)}
-.card.drag-over{outline:2px dashed var(--yellow-dark);outline-offset:2px}
-.card-label{display:inline-flex;align-items:center;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:500;margin-bottom:8px}
-.card-title{font-size:14px;font-weight:500;color:var(--black);margin-bottom:6px;line-height:1.4}
-.card-desc{font-size:12px;color:var(--gray3);margin-bottom:10px;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.col-add{padding:6px 10px 10px}
+.add-link{font-size:12px;color:var(--g3);cursor:pointer;display:flex;align-items:center;gap:4px;padding:4px 6px;border-radius:5px}
+.add-link:hover{color:var(--blk);background:var(--g2)}
+.card{background:var(--w);border-radius:8px;border:1px solid var(--bdr);padding:12px;cursor:grab;position:relative}
+.card:active{cursor:grabbing}.card.dragging{opacity:0.5}
+.card-label{display:inline-flex;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:500;margin-bottom:8px}
+.card-title{font-size:14px;font-weight:500;margin-bottom:6px;line-height:1.4}
+.card-desc{font-size:12px;color:var(--g3);margin-bottom:10px;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .card-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.badge{display:inline-flex;align-items:center;font-size:11px;font-weight:500;padding:2px 7px;border-radius:4px;gap:3px}
-.badge-high{background:#FCF0EF;color:var(--red)}
-.badge-medium{background:#FAEEDA;color:var(--yellow-dark)}
-.badge-low{background:#EAF3DE;color:var(--green)}
-.assignee{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--gray3);margin-left:auto}
-.avatar{width:20px;height:20px;border-radius:50%;background:var(--yellow);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:var(--yellow-deep)}
-.due{font-size:11px;color:var(--gray3);display:flex;align-items:center;gap:3px}
-.due.overdue{color:var(--red)}
+.badge{font-size:11px;font-weight:500;padding:2px 7px;border-radius:4px}
+.b-high{background:#FCF0EF;color:var(--red)}.b-medium{background:#FAEEDA;color:var(--yd)}.b-low{background:#EAF3DE;color:var(--grn)}
+.assignee{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--g3);margin-left:auto}
+.avatar{width:20px;height:20px;border-radius:50%;background:var(--y);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:var(--ydeep)}
+.due{font-size:11px;color:var(--g3)}.due.overdue{color:var(--red)}
 .card-actions{position:absolute;top:8px;right:8px;display:none;gap:4px}
 .card:hover .card-actions{display:flex}
-.icon-btn{width:22px;height:22px;border:none;background:var(--gray);border-radius:4px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--gray3)}
-.icon-btn:hover{background:var(--gray2)}
-
+.icon-btn{width:22px;height:22px;border:none;background:var(--gray);border-radius:4px;cursor:pointer;font-size:12px;color:var(--g3)}
+.icon-btn:hover{background:var(--g2)}
+.drop-zone.over{background:rgba(250,199,117,0.2)}
+.no-tasks{text-align:center;padding:30px 10px;font-size:12px;color:var(--g3)}
 .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,0.45);display:flex;align-items:center;justify-content:center;z-index:100}
-.modal{background:var(--white);border-radius:12px;width:480px;max-width:95vw;max-height:90vh;overflow-y:auto;border:1px solid var(--border)}
-.modal-head{padding:18px 20px 14px;border-bottom:2px solid var(--yellow);display:flex;align-items:center;justify-content:space-between}
+.modal{background:var(--w);border-radius:12px;width:480px;max-width:95vw;max-height:90vh;overflow-y:auto}
+.modal-head{padding:18px 20px 14px;border-bottom:2px solid var(--y);display:flex;align-items:center;justify-content:space-between}
 .modal-title{font-size:15px;font-weight:600}
-.close-btn{width:28px;height:28px;background:var(--gray);border:none;border-radius:6px;cursor:pointer;font-size:16px;color:var(--gray3);display:flex;align-items:center;justify-content:center}
-.close-btn:hover{background:var(--gray2)}
+.close-btn{width:28px;height:28px;background:var(--gray);border:none;border-radius:6px;cursor:pointer;font-size:16px;color:var(--g3)}
 .modal-body{padding:20px}
 .field{margin-bottom:16px}
-.field label{display:block;font-size:12px;font-weight:500;color:var(--gray3);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.3px}
-.field input,.field select,.field textarea{width:100%;padding:9px 12px;border:1px solid var(--gray2);border-radius:7px;font-size:14px;background:var(--white);color:var(--black);outline:none;transition:border 0.15s;font-family:inherit}
-.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--yellow-dark)}
+.field label{display:block;font-size:12px;font-weight:500;color:var(--g3);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.3px}
+.field input,.field select,.field textarea{width:100%;padding:9px 12px;border:1px solid var(--g2);border-radius:7px;font-size:14px;background:var(--w);color:var(--blk);outline:none;font-family:inherit}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--yd)}
 .field textarea{resize:vertical;min-height:70px}
 .fields-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.modal-foot{padding:14px 20px;border-top:1px solid var(--gray2);display:flex;gap:8px;justify-content:flex-end}
-.btn-save{background:var(--black);color:var(--yellow);padding:8px 20px;border-radius:7px;font-size:14px;font-weight:500;cursor:pointer;border:none}
-.btn-save:hover{background:#333}
-
-.team-modal .member{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:7px;border:1px solid var(--gray2);margin-bottom:8px;background:var(--gray)}
-.team-modal .member-name{font-size:13px;font-weight:500;flex:1}
-.member-role{font-size:11px;color:var(--gray3)}
-
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:0 24px 4px;margin-top:16px}
-.stat{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:10px 14px}
-.stat-num{font-size:22px;font-weight:700;color:var(--black)}
-.stat-label{font-size:11px;color:var(--gray3);margin-top:2px}
-
+.modal-foot{padding:14px 20px;border-top:1px solid var(--g2);display:flex;gap:8px;justify-content:flex-end}
+.btn-save{background:var(--blk);color:var(--y);padding:8px 20px;border-radius:7px;font-size:14px;font-weight:500;cursor:pointer;border:none}
 .tag-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
 .tag{padding:3px 9px;border-radius:4px;font-size:11px;font-weight:500;cursor:pointer;border:1px solid transparent}
-
-.no-tasks{text-align:center;padding:30px 10px;font-size:12px;color:var(--gray3)}
-
-.drop-zone{min-height:60px;border-radius:6px;transition:background 0.15s}
-.drop-zone.over{background:rgba(250,199,117,0.15)}
+.member-row{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:7px;border:1px solid var(--g2);margin-bottom:8px;background:var(--gray)}
+.spinner-sm{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin 0.7s linear infinite;vertical-align:middle;margin-right:4px}
+@keyframes spin{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
 
-<div id="gate" style="position:fixed;inset:0;background:#1a1a1a;display:flex;align-items:center;justify-content:center;z-index:999">
-  <div style="background:#fff;border-radius:12px;padding:32px;width:320px;border-top:4px solid #FAC775">
-    <div style="font-size:20px;font-weight:700;margin-bottom:4px">WOCULT</div>
-    <div style="font-size:13px;color:#888;margin-bottom:24px">Task Board — Team Access</div>
-    <input id="pw-input" type="password" placeholder="Enter password" style="width:100%;padding:10px 12px;border:1px solid #e0d8c8;border-radius:7px;font-size:14px;outline:none;margin-bottom:8px" onkeydown="if(event.key==='Enter')checkPw()" />
-    <div id="pw-err" style="font-size:12px;color:#E24B4A;margin-bottom:8px;display:none">Incorrect password</div>
-    <button onclick="checkPw()" style="width:100%;padding:10px;background:#1a1a1a;color:#FAC775;border:none;border-radius:7px;font-size:14px;font-weight:500;cursor:pointer">Enter</button>
-  </div>
-</div>
-<div id="app" style="display:none">
 <div class="topbar">
-  <div class="logo">WO<span>CULT</span></div>
+  <div class="logo">
+    <svg height="34" viewBox="0 0 220 34" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="17" cy="17" r="16" fill="#FAC775"/>
+      <text x="17" y="23" text-anchor="middle" font-family="Georgia,serif" font-size="18" font-weight="700" fill="#1a1a1a">W</text>
+      <text x="42" y="24" font-family="Georgia,serif" font-size="22" font-weight="600" letter-spacing="2" fill="#FAC775">WOCULT</text>
+    </svg>
+  </div>
   <div class="topbar-title">Task Board</div>
   <div class="topbar-actions">
+    <span><span class="sync-dot syncing" id="sync-dot"></span><span class="sync-label" id="sync-label"><span class="spinner-sm"></span>Connecting...</span></span>
     <button class="btn btn-ghost btn-sm" onclick="openTeam()">Team</button>
     <button class="btn btn-primary btn-sm" onclick="openAdd()">+ Add Task</button>
   </div>
 </div>
 
 <div class="stats">
-  <div class="stat"><div class="stat-num" id="s-total">0</div><div class="stat-label">Total tasks</div></div>
-  <div class="stat"><div class="stat-num" id="s-progress">0</div><div class="stat-label">In progress</div></div>
-  <div class="stat"><div class="stat-num" id="s-done">0</div><div class="stat-label">Completed</div></div>
+  <div class="stat hl"><div class="stat-n" id="s-total">0</div><div class="stat-l">Total tasks</div></div>
+  <div class="stat"><div class="stat-n" id="s-progress">0</div><div class="stat-l">In progress</div></div>
+  <div class="stat"><div class="stat-n" id="s-done">0</div><div class="stat-l">Completed</div></div>
 </div>
 
 <div class="board">
-  <div class="col" id="col-todo">
-    <div class="col-header">
-      <div class="col-dot" style="background:#888"></div>
-      <div class="col-title">To Do</div>
-      <div class="col-count" id="cnt-todo">0</div>
-    </div>
-    <div class="col-cards drop-zone" id="cards-todo" ondragover="onDragOver(event,'todo')" ondrop="onDrop(event,'todo')" ondragleave="onDragLeave(event)"></div>
+  <div class="col">
+    <div class="col-header"><div class="col-dot" style="background:#888"></div><div class="col-title">To Do</div><div class="col-count" id="cnt-todo">0</div></div>
+    <div class="col-cards drop-zone" id="cards-todo" ondragover="onDragOver(event,'todo')" ondrop="onDrop(event,'todo')" ondragleave="this.classList.remove('over')"></div>
     <div class="col-add"><div class="add-link" onclick="openAdd('todo')">＋ Add task</div></div>
   </div>
-  <div class="col" id="col-progress">
-    <div class="col-header">
-      <div class="col-dot" style="background:var(--yellow-dark)"></div>
-      <div class="col-title">In Progress</div>
-      <div class="col-count" id="cnt-progress">0</div>
-    </div>
-    <div class="col-cards drop-zone" id="cards-progress" ondragover="onDragOver(event,'progress')" ondrop="onDrop(event,'progress')" ondragleave="onDragLeave(event)"></div>
+  <div class="col">
+    <div class="col-header"><div class="col-dot" style="background:var(--yd)"></div><div class="col-title">In Progress</div><div class="col-count" id="cnt-progress">0</div></div>
+    <div class="col-cards drop-zone" id="cards-progress" ondragover="onDragOver(event,'progress')" ondrop="onDrop(event,'progress')" ondragleave="this.classList.remove('over')"></div>
     <div class="col-add"><div class="add-link" onclick="openAdd('progress')">＋ Add task</div></div>
   </div>
-  <div class="col" id="col-done">
-    <div class="col-header">
-      <div class="col-dot" style="background:var(--green)"></div>
-      <div class="col-title">Done</div>
-      <div class="col-count" id="cnt-done">0</div>
-    </div>
-    <div class="col-cards drop-zone" id="cards-done" ondragover="onDragOver(event,'done')" ondrop="onDrop(event,'done')" ondragleave="onDragLeave(event)"></div>
+  <div class="col">
+    <div class="col-header"><div class="col-dot" style="background:var(--grn)"></div><div class="col-title">Done</div><div class="col-count" id="cnt-done">0</div></div>
+    <div class="col-cards drop-zone" id="cards-done" ondragover="onDragOver(event,'done')" ondrop="onDrop(event,'done')" ondragleave="this.classList.remove('over')"></div>
     <div class="col-add"><div class="add-link" onclick="openAdd('done')">＋ Add task</div></div>
   </div>
 </div>
 
 <div class="modal-bg" id="task-modal" style="display:none">
   <div class="modal">
-    <div class="modal-head">
-      <div class="modal-title" id="modal-title-text">New Task</div>
-      <button class="close-btn" onclick="closeModal()">×</button>
-    </div>
+    <div class="modal-head"><div class="modal-title" id="modal-title-text">New Task</div><button class="close-btn" onclick="closeModal()">×</button></div>
     <div class="modal-body">
       <div class="field"><label>Title</label><input id="f-title" placeholder="What needs to be done?" /></div>
       <div class="field"><label>Description</label><textarea id="f-desc" placeholder="Add more context..."></textarea></div>
       <div class="fields-row">
-        <div class="field"><label>Assign to</label>
-          <select id="f-assign"><option value="">Unassigned</option></select>
-        </div>
-        <div class="field"><label>Status</label>
-          <select id="f-status">
-            <option value="todo">To Do</option>
-            <option value="progress">In Progress</option>
-            <option value="done">Done</option>
-          </select>
-        </div>
+        <div class="field"><label>Assign to</label><select id="f-assign"><option value="">Unassigned</option></select></div>
+        <div class="field"><label>Status</label><select id="f-status"><option value="todo">To Do</option><option value="progress">In Progress</option><option value="done">Done</option></select></div>
       </div>
       <div class="fields-row">
-        <div class="field"><label>Priority</label>
-          <select id="f-priority">
-            <option value="medium">Medium</option>
-            <option value="high">High</option>
-            <option value="low">Low</option>
-          </select>
-        </div>
+        <div class="field"><label>Priority</label><select id="f-priority"><option value="medium">Medium</option><option value="high">High</option><option value="low">Low</option></select></div>
         <div class="field"><label>Due date</label><input id="f-due" type="date" /></div>
       </div>
-      <div class="field"><label>Label</label>
-        <div class="tag-row" id="tag-picker"></div>
-      </div>
+      <div class="field"><label>Label</label><div class="tag-row" id="tag-picker"></div></div>
     </div>
     <div class="modal-foot">
       <button class="btn btn-danger btn-sm" id="del-btn" onclick="deleteTask()" style="display:none;margin-right:auto">Delete</button>
@@ -202,16 +139,12 @@ body{font-family:system-ui,sans-serif;background:#f5f0e8;color:#1a1a1a;min-heigh
 </div>
 
 <div class="modal-bg" id="team-modal" style="display:none">
-  <div class="modal team-modal" style="width:380px">
-    <div class="modal-head">
-      <div class="modal-title">Team members</div>
-      <button class="close-btn" onclick="document.getElementById('team-modal').style.display='none'">×</button>
-    </div>
+  <div class="modal" style="width:380px">
+    <div class="modal-head"><div class="modal-title">Team members</div><button class="close-btn" onclick="document.getElementById('team-modal').style.display='none'">×</button></div>
     <div class="modal-body">
       <div id="member-list"></div>
       <div style="display:flex;gap:8px;margin-top:12px">
-        <input id="new-member-name" placeholder="Name" style="flex:1;padding:8px 10px;border:1px solid var(--gray2);border-radius:7px;font-size:13px;outline:none" />
-
+        <input id="new-member-name" placeholder="Name" style="flex:1;padding:8px 10px;border:1px solid var(--g2);border-radius:7px;font-size:13px;outline:none" />
         <button class="btn btn-primary" onclick="addMember()">Add</button>
       </div>
     </div>
@@ -219,6 +152,10 @@ body{font-family:system-ui,sans-serif;background:#f5f0e8;color:#1a1a1a;min-heigh
 </div>
 
 <script>
+const PROJECT = 'wocult-tasks';
+const API_KEY = 'AIzaSyBg_ELUjlWMiFKzrykPm9O002tIA-TB1OY';
+const BASE = `https://firestore.googleapis.com/v1/projects/${PROJECT}/databases/(default)/documents`;
+
 const LABELS = [
   {name:'Editorial',bg:'#FFF3E0',color:'#B75E00'},
   {name:'Design',bg:'#E8F5E9',color:'#2E7D32'},
@@ -228,214 +165,215 @@ const LABELS = [
   {name:'Tech',bg:'#E0F2F1',color:'#00695C'},
 ];
 
-let state = {tasks:[],members:[],editId:null,selectedLabel:null};
+let tasks={}, members={}, editId=null, selLabel=null, dragId=null;
 
-function load(){
+// Firestore REST helpers
+function toFS(obj){
+  const fields={};
+  for(const [k,v] of Object.entries(obj)){
+    if(v===null||v===undefined) fields[k]={nullValue:null};
+    else fields[k]={stringValue:String(v)};
+  }
+  return {fields};
+}
+
+function fromFS(doc){
+  const id=doc.name.split('/').pop();
+  const obj={id};
+  for(const [k,v] of Object.entries(doc.fields||{})){
+    obj[k]=v.stringValue??v.nullValue??'';
+  }
+  return obj;
+}
+
+async function fsGet(col){
+  const r=await fetch(`${BASE}/${col}?key=${API_KEY}`);
+  const d=await r.json();
+  if(!d.documents) return [];
+  return d.documents.map(fromFS);
+}
+
+async function fsAdd(col,data){
+  const r=await fetch(`${BASE}/${col}?key=${API_KEY}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(toFS(data))});
+  return fromFS(await r.json());
+}
+
+async function fsUpdate(col,id,data){
+  const fields=Object.keys(data).map(k=>`updateMask.fieldPaths=${k}`).join('&');
+  await fetch(`${BASE}/${col}/${id}?${fields}&key=${API_KEY}`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify(toFS(data))});
+}
+
+async function fsDel(col,id){
+  await fetch(`${BASE}/${col}/${id}?key=${API_KEY}`,{method:'DELETE'});
+}
+
+function setSyncing(v){
+  document.getElementById('sync-dot').classList.toggle('syncing',v);
+  document.getElementById('sync-label').textContent=v?'Saving...':'Live — synced';
+}
+
+function setStatus(msg,offline=false){
+  document.getElementById('sync-dot').className='sync-dot'+(offline?' offline':' ');
+  document.getElementById('sync-label').textContent=msg;
+}
+
+async function loadAll(){
   try{
-    const s = localStorage.getItem('wocult_board');
-    if(s) state = JSON.parse(s);
-  }catch(e){}
-  if(!state.members) state.members = [];
-  if(!state.tasks) state.tasks = [];
-}
-
-function save(){
-  try{ localStorage.setItem('wocult_board', JSON.stringify(state)); }catch(e){}
-}
-
-function uid(){ return Math.random().toString(36).slice(2,9); }
-
-function initSample(){
-  if(state.tasks.length > 0) return;
-  state.members = [
-    {id:uid(),name:'Anshul',role:'Co-founder'},
-    {id:uid(),name:'Divya',role:'Editor'},
-    {id:uid(),name:'Rahul',role:'Designer'},
-  ];
-  const m = state.members;
-  state.tasks = [
-    {id:uid(),title:'Q2 editorial calendar',desc:'Plan content themes for April–June across all verticals.',status:'progress',priority:'high',assignee:m[0].id,due:'2026-04-25',label:'Editorial'},
-    {id:uid(),title:'Redesign homepage hero',desc:'Update headline and visual layout for Wocult site.',status:'todo',priority:'medium',assignee:m[2].id,due:'2026-04-30',label:'Design'},
-    {id:uid(),title:'CEO tracker v2 launch',desc:'Push new Python scheduler update to production.',status:'todo',priority:'high',assignee:m[0].id,due:'2026-04-22',label:'Tech'},
-    {id:uid(),title:'Instagram reels for April',desc:'Batch create 4 reels based on published articles.',status:'progress',priority:'medium',assignee:m[1].id,due:'2026-04-21',label:'Social'},
-    {id:uid(),title:'Research: AI workplaces report',desc:'Gather secondary data for long-form feature piece.',status:'done',priority:'low',assignee:m[1].id,due:'2026-04-15',label:'Research'},
-  ];
-  save();
+    const [t,m]=await Promise.all([fsGet('tasks'),fsGet('members')]);
+    tasks={}; t.forEach(x=>tasks[x.id]=x);
+    members={}; m.forEach(x=>members[x.id]=x);
+    if(Object.keys(members).length===0){
+      await fsAdd('members',{name:'Anshul'});
+      await fsAdd('members',{name:'Divya'});
+      const m2=await fsGet('members');
+      members={}; m2.forEach(x=>members[x.id]=x);
+    }
+    render();
+    setStatus('Live — synced');
+  }catch(e){
+    setStatus('Offline',true);
+  }
 }
 
 function render(){
   ['todo','progress','done'].forEach(col=>{
-    const tasks = state.tasks.filter(t=>t.status===col);
-    document.getElementById('cnt-'+col).textContent = tasks.length;
-    const c = document.getElementById('cards-'+col);
-    if(tasks.length===0){c.innerHTML='<div class="no-tasks">No tasks yet</div>';return;}
-    c.innerHTML = tasks.map(t=>cardHTML(t)).join('');
-    tasks.forEach(t=>{
-      const el = document.getElementById('card-'+t.id);
-      el.addEventListener('dragstart',e=>onDragStart(e,t.id));
-      el.addEventListener('dragend',e=>{el.classList.remove('dragging')});
+    const ts=Object.values(tasks).filter(t=>t.status===col);
+    document.getElementById('cnt-'+col).textContent=ts.length;
+    const c=document.getElementById('cards-'+col);
+    if(!ts.length){c.innerHTML='<div class="no-tasks">No tasks yet</div>';return;}
+    c.innerHTML=ts.map(cardHTML).join('');
+    ts.forEach(t=>{
+      const el=document.getElementById('card-'+t.id);
+      if(!el) return;
+      el.addEventListener('dragstart',e=>{dragId=t.id;el.classList.add('dragging');e.dataTransfer.effectAllowed='move';});
+      el.addEventListener('dragend',()=>el.classList.remove('dragging'));
     });
   });
-  document.getElementById('s-total').textContent = state.tasks.length;
-  document.getElementById('s-progress').textContent = state.tasks.filter(t=>t.status==='progress').length;
-  document.getElementById('s-done').textContent = state.tasks.filter(t=>t.status==='done').length;
+  document.getElementById('s-total').textContent=Object.keys(tasks).length;
+  document.getElementById('s-progress').textContent=Object.values(tasks).filter(t=>t.status==='progress').length;
+  document.getElementById('s-done').textContent=Object.values(tasks).filter(t=>t.status==='done').length;
 }
 
 function cardHTML(t){
-  const m = state.members.find(x=>x.id===t.assignee);
-  const initials = m ? m.name.split(' ').map(x=>x[0]).join('').toUpperCase() : '?';
-  const lbl = LABELS.find(l=>l.name===t.label);
-  const today = new Date().toISOString().split('T')[0];
-  const overdue = t.due && t.due < today && t.status!=='done';
-  const dueStr = t.due ? new Date(t.due+'T00:00:00').toLocaleDateString('en-IN',{day:'numeric',month:'short'}) : '';
+  const m=members[t.assignee];
+  const initials=m?m.name.split(' ').map(x=>x[0]).join('').toUpperCase():'';
+  const lbl=LABELS.find(l=>l.name===t.label);
+  const today=new Date().toISOString().split('T')[0];
+  const overdue=t.due&&t.due<today&&t.status!=='done';
+  const dueStr=t.due?new Date(t.due+'T00:00:00').toLocaleDateString('en-IN',{day:'numeric',month:'short'}):'';
   return `<div class="card" id="card-${t.id}" draggable="true" onclick="openEdit('${t.id}')">
-    <div class="card-actions">
-      <button class="icon-btn" onclick="event.stopPropagation();openEdit('${t.id}')">✏</button>
-    </div>
+    <div class="card-actions"><button class="icon-btn" onclick="event.stopPropagation();openEdit('${t.id}')">✏</button></div>
     ${lbl?`<div class="card-label" style="background:${lbl.bg};color:${lbl.color}">${lbl.name}</div>`:''}
     <div class="card-title">${t.title}</div>
     ${t.desc?`<div class="card-desc">${t.desc}</div>`:''}
     <div class="card-meta">
-      <span class="badge badge-${t.priority}">${t.priority}</span>
+      <span class="badge b-${t.priority||'medium'}">${t.priority||'medium'}</span>
       ${dueStr?`<span class="due${overdue?' overdue':''}">${overdue?'⚠ ':''}${dueStr}</span>`:''}
       ${m?`<div class="assignee"><div class="avatar">${initials}</div><span>${m.name}</span></div>`:''}
     </div>
   </div>`;
 }
 
-let dragId = null;
-function onDragStart(e,id){
-  dragId=id;
-  document.getElementById('card-'+id).classList.add('dragging');
-  e.dataTransfer.effectAllowed='move';
-}
-function onDragOver(e,col){
-  e.preventDefault();
-  document.getElementById('cards-'+col).classList.add('over');
-}
-function onDragLeave(e){ e.currentTarget.classList.remove('over'); }
-function onDrop(e,col){
-  e.preventDefault();
-  e.currentTarget.classList.remove('over');
+function onDragOver(e,col){e.preventDefault();document.getElementById('cards-'+col).classList.add('over');}
+async function onDrop(e,col){
+  e.preventDefault();e.currentTarget.classList.remove('over');
   if(!dragId) return;
-  const t = state.tasks.find(x=>x.id===dragId);
-  if(t){ t.status=col; save(); render(); }
-  dragId=null;
+  tasks[dragId].status=col; render();
+  setSyncing(true);
+  await fsUpdate('tasks',dragId,{status:col});
+  setSyncing(false); dragId=null;
 }
 
 function openAdd(status='todo'){
-  state.editId=null;
+  editId=null;
   document.getElementById('modal-title-text').textContent='New Task';
   document.getElementById('del-btn').style.display='none';
   document.getElementById('f-title').value='';
   document.getElementById('f-desc').value='';
-  document.getElementById('f-assign').value='';
   document.getElementById('f-status').value=status;
   document.getElementById('f-priority').value='medium';
   document.getElementById('f-due').value='';
-  state.selectedLabel=null;
-  buildTagPicker();
-  buildAssignSelect();
+  selLabel=null; buildTagPicker(); buildAssignSelect();
   document.getElementById('task-modal').style.display='flex';
   setTimeout(()=>document.getElementById('f-title').focus(),50);
 }
 
 function openEdit(id){
-  const t = state.tasks.find(x=>x.id===id);
-  if(!t) return;
-  state.editId=id;
+  const t=tasks[id]; if(!t) return;
+  editId=id;
   document.getElementById('modal-title-text').textContent='Edit Task';
   document.getElementById('del-btn').style.display='inline-flex';
-  document.getElementById('f-title').value=t.title;
+  document.getElementById('f-title').value=t.title||'';
   document.getElementById('f-desc').value=t.desc||'';
-  buildAssignSelect(t.assignee);
-  document.getElementById('f-status').value=t.status;
+  document.getElementById('f-status').value=t.status||'todo';
   document.getElementById('f-priority').value=t.priority||'medium';
   document.getElementById('f-due').value=t.due||'';
-  state.selectedLabel=t.label||null;
-  buildTagPicker();
+  selLabel=t.label||null;
+  buildAssignSelect(t.assignee); buildTagPicker();
   document.getElementById('task-modal').style.display='flex';
 }
 
 function buildAssignSelect(sel=''){
-  const s = document.getElementById('f-assign');
+  const s=document.getElementById('f-assign');
   s.innerHTML='<option value="">Unassigned</option>';
-  state.members.forEach(m=>{ const o=document.createElement('option'); o.value=m.id; o.textContent=m.name; if(m.id===sel)o.selected=true; s.appendChild(o); });
+  Object.values(members).forEach(m=>{
+    const o=document.createElement('option');
+    o.value=m.id; o.textContent=m.name; if(m.id===sel) o.selected=true;
+    s.appendChild(o);
+  });
 }
 
 function buildTagPicker(){
-  const row = document.getElementById('tag-picker');
-  row.innerHTML = LABELS.map(l=>`<div class="tag" style="background:${l.bg};color:${l.color};border-color:${state.selectedLabel===l.name?l.color:'transparent'};${state.selectedLabel===l.name?'font-weight:600':''}" onclick="selectTag('${l.name}')">${l.name}</div>`).join('');
+  document.getElementById('tag-picker').innerHTML=LABELS.map(l=>
+    `<div class="tag" style="background:${l.bg};color:${l.color};border-color:${selLabel===l.name?l.color:'transparent'};${selLabel===l.name?'font-weight:600':''}" onclick="selLabel=selLabel==='${l.name}'?null:'${l.name}';buildTagPicker()">${l.name}</div>`
+  ).join('');
 }
 
-function selectTag(name){
-  state.selectedLabel = state.selectedLabel===name ? null : name;
-  buildTagPicker();
+async function saveTask(){
+  const title=document.getElementById('f-title').value.trim(); if(!title) return;
+  const data={title,desc:document.getElementById('f-desc').value,assignee:document.getElementById('f-assign').value,status:document.getElementById('f-status').value,priority:document.getElementById('f-priority').value,due:document.getElementById('f-due').value,label:selLabel||''};
+  setSyncing(true); closeModal();
+  if(editId){ tasks[editId]={...tasks[editId],...data}; render(); await fsUpdate('tasks',editId,data); }
+  else{ const t=await fsAdd('tasks',data); tasks[t.id]=t; render(); }
+  setSyncing(false);
 }
 
-function saveTask(){
-  const title = document.getElementById('f-title').value.trim();
-  if(!title) return;
-  if(state.editId){
-    const t = state.tasks.find(x=>x.id===state.editId);
-    Object.assign(t,{title,desc:document.getElementById('f-desc').value,assignee:document.getElementById('f-assign').value,status:document.getElementById('f-status').value,priority:document.getElementById('f-priority').value,due:document.getElementById('f-due').value,label:state.selectedLabel});
-  } else {
-    state.tasks.push({id:uid(),title,desc:document.getElementById('f-desc').value,assignee:document.getElementById('f-assign').value,status:document.getElementById('f-status').value,priority:document.getElementById('f-priority').value,due:document.getElementById('f-due').value,label:state.selectedLabel});
-  }
-  save(); render(); closeModal();
-}
-
-function deleteTask(){
-  if(!state.editId) return;
-  state.tasks = state.tasks.filter(t=>t.id!==state.editId);
-  save(); render(); closeModal();
+async function deleteTask(){
+  if(!editId) return;
+  delete tasks[editId]; render(); closeModal();
+  setSyncing(true); await fsDel('tasks',editId); setSyncing(false);
 }
 
 function closeModal(){ document.getElementById('task-modal').style.display='none'; }
 
-function openTeam(){
-  renderMembers();
-  document.getElementById('team-modal').style.display='flex';
-}
+function openTeam(){ renderMembers(); document.getElementById('team-modal').style.display='flex'; }
+
 function renderMembers(){
-  document.getElementById('member-list').innerHTML = state.members.map(m=>`
-    <div class="member">
-      <div class="avatar" style="width:30px;height:30px;font-size:11px">${m.name.split(' ').map(x=>x[0]).join('').toUpperCase()}</div>
-      <div><div class="member-name">${m.name}</div></div>
-      <button class="icon-btn" onclick="removeMember('${m.id}')" style="margin-left:auto">×</button>
+  document.getElementById('member-list').innerHTML=Object.values(members).map(m=>
+    `<div class="member-row">
+      <div class="avatar" style="width:28px;height:28px;font-size:10px">${m.name.split(' ').map(x=>x[0]).join('').toUpperCase()}</div>
+      <div style="font-size:13px;font-weight:500;flex:1">${m.name}</div>
+      <button class="icon-btn" onclick="removeMember('${m.id}')">×</button>
     </div>`).join('');
 }
-function addMember(){
-  const name = document.getElementById('new-member-name').value.trim();
-  if(!name) return;
-  state.members.push({id:uid(),name});
+
+async function addMember(){
+  const name=document.getElementById('new-member-name').value.trim(); if(!name) return;
+  setSyncing(true);
+  const m=await fsAdd('members',{name});
+  members[m.id]=m;
   document.getElementById('new-member-name').value='';
-  document.getElementById('new-member-role').value='';
-  save(); renderMembers();
-}
-function removeMember(id){
-  state.members = state.members.filter(m=>m.id!==id);
-  state.tasks.forEach(t=>{ if(t.assignee===id) t.assignee=''; });
-  save(); renderMembers(); render();
+  renderMembers(); setSyncing(false);
 }
 
-function checkPw(){
-  const val = document.getElementById('pw-input').value;
-  if(val === '0penWocult!'){
-    document.getElementById('gate').style.display='none';
-    document.getElementById('app').style.display='block';
-    sessionStorage.setItem('wocult_auth','1');
-  } else {
-    document.getElementById('pw-err').style.display='block';
-    document.getElementById('pw-input').value='';
-  }
+async function removeMember(id){
+  delete members[id]; renderMembers();
+  setSyncing(true); await fsDel('members',id); setSyncing(false);
 }
-if(sessionStorage.getItem('wocult_auth')==='1'){
-  document.getElementById('gate').style.display='none';
-  document.getElementById('app').style.display='block';
-}
-load(); initSample(); render();
+
+// Auto-refresh every 10 seconds
+setInterval(loadAll, 10000);
+loadAll();
 </script>
-</div>
 </body>
 </html>
